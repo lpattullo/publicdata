@@ -1,0 +1,82 @@
+---
+title: "NLP Exercises Week 1"
+author: "Avery Pattullo, Adult Learner"
+date: "`r format(Sys.Date(), '%B %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    css: !expr here::here("../StylesTemplates/ap_01.css")
+---
+
+```{r setup, include=F}
+knitr::opts_chunk$set(fig.width=8, fig.height=5, fig.align = 'left', fig.path='Figs/', cache.path='Cache/', eval=T, echo=T, tidy=TRUE,  cache=F, message=F, warning=F, stringsAsFactors=F, yaml.eval.expr = TRUE)  
+
+library(xfun)
+pkg_attach("tidyverse", "here", "kableExtra", "RCurl", "psych", "knitr", "RColorBrewer", 'dplyr', install=T)
+
+jamie.theme <- theme_bw() + theme(axis.line = element_line(colour = "black"), panel.grid.minor = element_blank(), panel.grid.major = element_blank(), panel.border = element_blank(), panel.background = element_blank(), legend.title= element_blank())  #custom theme ggplot2
+
+
+print.me <- function(x, ...) {
+if (nrow(x) > 200){
+   len <- 200 
+    } else {
+       len <- (nrow(x))
+}
+   x[1:len,] %>%
+   kbl(digits=2, align= 'l', booktabs=T) %>%
+   kable_styling(fixed_thead = T) %>%
+   kable_paper("striped", full_width = T, html_font = "Helvetica", font_size = 12) %>%
+   row_spec(0, color = "white", background = "#5b705f", font_size = 12) %>%
+   scroll_box(width = "700px", height = "500px") %>%
+   asis_output()
+}
+
+registerS3method("knit_print", "data.frame", print.me)
+#to_R <- read.csv(here("data", "MyRaw.txt")) ---- using 'here' to read in data
+```
+
+# My first homework
+Task 1 - customize stylesheet with own colours, fonts, images. <br></br>
+
+## Test for subheader formatting
+```{r}
+#print a sequence of numbers 1-10
+
+myseq <- seq(1:10)
+
+print(myseq)
+
+```
+
+# Homework: The Meat of It 
+Task 2 - create string called Mary Had A Little Lamb in one code block, then split the string it so each word has its own line. Then add a variable called Nletters that counts the letters in each word. 
+
+
+```{r}
+
+#Create a string of Mary Had a Little Lamb
+mary <- "Mary had a little lamb whose fleece was white as snow and everywhere that Mary went that lamb was sure it go it followed her to school one day which was against the rules it made the children laugh and play to see that lamb at school"
+
+str(mary)
+
+# Split this string based on spaces (each word separated by a space is a separate string) 
+split_mary <- strsplit(mary, split = " ")
+print(split_mary)
+
+#Convert this list to dataframe 
+mary_df <- as.data.frame(split_mary)
+
+#Change column name from the entire string to "word"
+colnames(mary_df)<- c("word")
+
+#Add column for Nletters for each word 
+mary_df <- mary_df %>% mutate(Nchar = nchar(mary_df$word))
+
+mary_df
+
+```
+
+
